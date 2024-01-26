@@ -1916,5 +1916,12 @@ public final class Keys {
     public static final ConfigKey<Integer> BROADCAST_PORT = new IntegerConfigKey(
             "broadcast.port",
             List.of(KeyType.CONFIG));
+    /**
+     * Speed filter.
+     */
+    public static final ConfigKey<Boolean> SPEED_FILTER = new BooleanConfigKey(
+            "speed.filter",
+            List.of(KeyType.CONFIG),false);
+1			
 
 }
