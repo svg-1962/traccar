@@ -46,8 +46,8 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FilterHandler.class);
 
+    private final boolean speedFilter;
     private final boolean enabled;
-	private final boolean speedFilter;
     private final boolean filterInvalid;
     private final boolean filterZero;
     private final boolean filterDuplicate;
@@ -72,8 +72,8 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     @Inject
     public FilterHandler(
             Config config, CacheManager cacheManager, Storage storage, StatisticsManager statisticsManager) {
+        speedFilter = config.getBoolean(Keys.SPEED_FILTER);
         enabled = config.getBoolean(Keys.FILTER_ENABLE);
-		speedFilter= config.getBoolean(Keys.SPEED_FILTER);
         filterInvalid = config.getBoolean(Keys.FILTER_INVALID);
         filterZero = config.getBoolean(Keys.FILTER_ZERO);
         filterDuplicate = config.getBoolean(Keys.FILTER_DUPLICATE);
@@ -126,7 +126,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
         return false;
     }
 
-    private boolean filterOutdated(Position position) 
+    private boolean filterOutdated(Position position) {
         return filterOutdated && position.getOutdated();
     }
 
@@ -146,8 +146,8 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
         return filterApproximate && position.getBoolean(Position.KEY_APPROXIMATE);
     }
 
-    private boolean filterStatic(Position position, Position last) {
-        return filterStatic && position.getSpeed() == 0.0 && (position.KEY_IGNITION=="OFF" && last.KEY_IGNITION="OFF");
+    private boolean filterStatic(Position position,Position last) {
+        return filterStatic && position.getSpeed() == 0.0 && (position.getBoolean(Position.KEY_IGNITION)==false && last.getBoolean(last.KEY_IGNITION)==false);
     }
 
     private boolean filterDistance(Position position, Position last) {
@@ -207,35 +207,35 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
         // filter out invalid data
         if (filterInvalid(position)) {
             filterType.append("Invalid ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterZero(position)) {
             filterType.append("Zero ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterOutdated(position)) {
             filterType.append("Outdated ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterFuture(position)) {
             filterType.append("Future ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterPast(position)) {
             filterType.append("Past ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterAccuracy(position)) {
             filterType.append("Accuracy ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterApproximate(position)) {
             filterType.append("Approximate ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
         if (filterDailyLimit(position)) {
             filterType.append("DailyLimit ");
-			if(speedFilter) return true;
+            if(speedFilter) return true;
         }
 
         // filter out excessive data
@@ -255,23 +255,24 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
             }
             if (filterDuplicate(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
                 filterType.append("Duplicate ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
-            if (filterStatic(position,preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
+			LOGGER.info("Current =  {} Last = {}", position.getBoolean(Position.KEY_IGNITION),preceding.getBoolean(preceding.KEY_IGNITION));
+            if (filterStatic(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
                 filterType.append("Static ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
             if (filterDistance(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
                 filterType.append("Distance ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
             if (filterMaxSpeed(position, preceding)) {
                 filterType.append("MaxSpeed ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
             if (filterMinPeriod(position, preceding)) {
                 filterType.append("MinPeriod ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
         }
 
@@ -280,7 +281,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
             Calendar calendar = cacheManager.getObject(Calendar.class, device.getCalendarId());
             if (!calendar.checkMoment(position.getFixTime())) {
                 filterType.append("Calendar ");
-				if(speedFilter) return true;
+                if(speedFilter) return true;
             }
         }
 
