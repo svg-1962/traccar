@@ -1921,7 +1921,7 @@ public final class Keys {
      */
     public static final ConfigKey<Boolean> SPEED_FILTER = new BooleanConfigKey(
             "speed.filter",
-            List.of(KeyType.CONFIG),false);
+            List.of(KeyType.CONFIG));
 1			
 
 }
