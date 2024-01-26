@@ -146,8 +146,8 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
         return filterApproximate && position.getBoolean(Position.KEY_APPROXIMATE);
     }
 
-    private boolean filterStatic(Position position) {
-        return filterStatic && position.getSpeed() == 0.0;
+    private boolean filterStatic(Position position, Position last) {
+        return filterStatic && position.getSpeed() && (position.ignition==false && last.ignition==false) == 0.0;
     }
 
     private boolean filterDistance(Position position, Position last) {
@@ -257,7 +257,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
                 filterType.append("Duplicate ");
 				if(speedFilter) return true;
             }
-            if (filterStatic(position) && !skipLimit(position, preceding) && !skipAttributes(position)) {
+            if (filterStatic(position,preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
                 filterType.append("Static ");
 				if(speedFilter) return true;
             }
