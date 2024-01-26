@@ -147,7 +147,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     }
 
     private boolean filterStatic(Position position, Position last) {
-        return filterStatic && position.getSpeed() == 0.0 && (position.KEY_IGNITION && last.KEY_IGNITION);
+        return filterStatic && position.getSpeed() == 0.0 && (position.KEY_IGNITION=="OFF" && last.KEY_IGNITION="OFF");
     }
 
     private boolean filterDistance(Position position, Position last) {
