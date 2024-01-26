@@ -126,7 +126,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
         return false;
     }
 
-    private boolean filterOutdated(Position position) {
+    private boolean filterOutdated(Position position) 
         return filterOutdated && position.getOutdated();
     }
 
@@ -147,7 +147,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     }
 
     private boolean filterStatic(Position position, Position last) {
-        return filterStatic && position.getSpeed() && (position.ignition==false && last.ignition==false) == 0.0;
+        return filterStatic && position.getSpeed() && (position.KEY_IGNITION==false && last.KEY_IGNITION==false) == 0.0;
     }
 
     private boolean filterDistance(Position position, Position last) {
