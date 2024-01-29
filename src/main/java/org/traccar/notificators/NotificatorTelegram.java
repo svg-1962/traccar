@@ -17,6 +17,8 @@
 package org.traccar.notificators;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.config.Config;
 import org.traccar.config.Keys;
 import org.traccar.model.Event;
@@ -32,6 +34,8 @@ import jakarta.ws.rs.client.Entity;
 
 @Singleton
 public class NotificatorTelegram implements Notificator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotificatorTelegram.class);
 
     private final NotificationFormatter notificationFormatter;
     private final Client client;
@@ -95,8 +99,12 @@ public class NotificatorTelegram implements Notificator {
             message.chatId = chatId;
         }
         message.text = shortMessage.getBody();
+
+	// Как то узнать что это не надо делать
+	//LOGGER.info("Event =========  {}======= {}", event.getGeofenceId(),event.getType());
+
         client.target(urlSendText).request().post(Entity.json(message)).close();
-        if (sendLocation && position != null) {
+        if (sendLocation && position != null && event.getGeofenceId()==0) {
             client.target(urlSendLocation).request().post(
                     Entity.json(createLocationMessage(message.chatId, position))).close();
         }
