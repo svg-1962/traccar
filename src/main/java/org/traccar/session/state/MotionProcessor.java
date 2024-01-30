@@ -18,16 +18,21 @@ package org.traccar.session.state;
 import org.traccar.model.Event;
 import org.traccar.model.Position;
 import org.traccar.reports.common.TripsConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class MotionProcessor {
 
     private MotionProcessor() {
     }
+	private static final Logger LOGGER = LoggerFactory.getLogger(MotionProcessor.class);
 
     public static void updateState(
             MotionState state, Position position, boolean newState, TripsConfig tripsConfig) {
 
         state.setEvent(null);
+
+		LOGGER.info("newState =========  {}", newState);
 
         boolean oldState = state.getMotionState();
         if (oldState == newState) {
