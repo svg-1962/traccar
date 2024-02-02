@@ -203,6 +203,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     protected boolean filter(Position position) {
 
         StringBuilder filterType = new StringBuilder();
+		long deviceId = position.getDeviceId();
 		Device device = cacheManager.getObject(Device.class, deviceId);
 		while(true)
 			{
@@ -241,7 +242,6 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
 			}
 
 			// filter out excessive data
-			long deviceId = position.getDeviceId();
 			if (filterDuplicate || filterStatic || filterDistance > 0 || filterMaxSpeed > 0 || filterMinPeriod > 0) {
 				Position preceding = null;
 				if (filterRelative) {
