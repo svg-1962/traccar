@@ -204,7 +204,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
 
         StringBuilder filterType = new StringBuilder();
 		Device device;
-		while(1)
+		while(true)
 			{
 			// filter out invalid data
 			if (filterInvalid(position)) {
