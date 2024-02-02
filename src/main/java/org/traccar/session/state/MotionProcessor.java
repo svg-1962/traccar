@@ -27,12 +27,15 @@ public final class MotionProcessor {
 
     private MotionProcessor() {
     }
+	private static final Logger LOGGER = LoggerFactory.getLogger(MotionProcessor.class);
 
     public static void updateState(
             MotionState state, Position position, boolean newState, TripsConfig tripsConfig) {
 
 		LOGGER.info("MotionState === {}",state.getMotionState());
         state.setEvent(null);
+
+		LOGGER.info("newState =========  {}", newState);
 
         boolean oldState = state.getMotionState();
         if (oldState == newState) {
