@@ -203,7 +203,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     protected boolean filter(Position position) {
 
         StringBuilder filterType = new StringBuilder();
-
+		Device device;
 		while(1)
 			{
 			// filter out invalid data
@@ -278,7 +278,7 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
 				}
 			}
 
-			Device device = cacheManager.getObject(Device.class, deviceId);
+			device = cacheManager.getObject(Device.class, deviceId);
 			if (device.getCalendarId() > 0) {
 				Calendar calendar = cacheManager.getObject(Calendar.class, device.getCalendarId());
 				if (!calendar.checkMoment(position.getFixTime())) {
