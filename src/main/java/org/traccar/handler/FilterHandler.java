@@ -203,93 +203,93 @@ public class FilterHandler extends ChannelInboundHandlerAdapter {
     protected boolean filter(Position position) {
 
         StringBuilder filterType = new StringBuilder();
+		long deviceId = position.getDeviceId();
+		Device device = cacheManager.getObject(Device.class, deviceId);
+		while(true)
+			{
+			// filter out invalid data
+			if (filterInvalid(position)) {
+				filterType.append("Invalid ");
+				if(speedFilter) break;
+			}
+			if (filterZero(position)) {
+				filterType.append("Zero ");
+				if(speedFilter) break;
+			}
+			if (filterOutdated(position)) {
+				filterType.append("Outdated ");
+				if(speedFilter) break;
+			}
+			if (filterFuture(position)) {
+				filterType.append("Future ");
+				if(speedFilter) break;
+			}
+			if (filterPast(position)) {
+				filterType.append("Past ");
+				if(speedFilter) break;
+			}
+			if (filterAccuracy(position)) {
+				filterType.append("Accuracy ");
+				if(speedFilter) break;
+			}
+			if (filterApproximate(position)) {
+				filterType.append("Approximate ");
+				if(speedFilter) break;
+			}
+			if (filterDailyLimit(position)) {
+				filterType.append("DailyLimit ");
+				if(speedFilter) break;
+			}
 
-        // filter out invalid data
-        if (filterInvalid(position)) {
-            filterType.append("Invalid ");
-            if(speedFilter) return true;
-        }
-        if (filterZero(position)) {
-            filterType.append("Zero ");
-            if(speedFilter) return true;
-        }
-        if (filterOutdated(position)) {
-            filterType.append("Outdated ");
-            if(speedFilter) return true;
-        }
-        if (filterFuture(position)) {
-            filterType.append("Future ");
-            if(speedFilter) return true;
-        }
-        if (filterPast(position)) {
-            filterType.append("Past ");
-            if(speedFilter) return true;
-        }
-        if (filterAccuracy(position)) {
-            filterType.append("Accuracy ");
-            if(speedFilter) return true;
-        }
-        if (filterApproximate(position)) {
-            filterType.append("Approximate ");
-            if(speedFilter) return true;
-        }
-        if (filterDailyLimit(position)) {
-            filterType.append("DailyLimit ");
-            if(speedFilter) return true;
-        }
+			// filter out excessive data
+			if (filterDuplicate || filterStatic || filterDistance > 0 || filterMaxSpeed > 0 || filterMinPeriod > 0) {
+				Position preceding = null;
+				if (filterRelative) {
+					try {
+						Date newFixTime = position.getFixTime();
+						preceding = getPrecedingPosition(deviceId, newFixTime);
+					} catch (StorageException e) {
+						LOGGER.warn("Error retrieving preceding position; fallbacking to last received position.", e);
+						preceding = cacheManager.getPosition(deviceId);
+					}
+				} else {
+					preceding = cacheManager.getPosition(deviceId);
+				}
+				if (filterDuplicate(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
+					filterType.append("Duplicate ");
+					if(speedFilter) break;
+				}
+				LOGGER.info("Current =  {} Last = {}", position.getBoolean(Position.KEY_IGNITION),preceding.getBoolean(preceding.KEY_IGNITION));
+				if (filterStatic(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
+					filterType.append("Static ");
+					if(speedFilter) break;
+				}
+				if (filterDistance(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
+					filterType.append("Distance ");
+					if(speedFilter) break;
+				}
+				if (filterMaxSpeed(position, preceding)) {
+					filterType.append("MaxSpeed ");
+					if(speedFilter) break;
+				}
+				if (filterMinPeriod(position, preceding)) {
+					filterType.append("MinPeriod ");
+					if(speedFilter) break;
+				}
+			}
 
-        // filter out excessive data
-        long deviceId = position.getDeviceId();
-        if (filterDuplicate || filterStatic || filterDistance > 0 || filterMaxSpeed > 0 || filterMinPeriod > 0) {
-            Position preceding = null;
-            if (filterRelative) {
-                try {
-                    Date newFixTime = position.getFixTime();
-                    preceding = getPrecedingPosition(deviceId, newFixTime);
-                } catch (StorageException e) {
-                    LOGGER.warn("Error retrieving preceding position; fallbacking to last received position.", e);
-                    preceding = cacheManager.getPosition(deviceId);
-                }
-            } else {
-                preceding = cacheManager.getPosition(deviceId);
-            }
-            if (filterDuplicate(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
-                filterType.append("Duplicate ");
-                if(speedFilter) return true;
-            }
-			LOGGER.info("Current =  {} Last = {}", position.getBoolean(Position.KEY_IGNITION),preceding.getBoolean(preceding.KEY_IGNITION));
-            if (filterStatic(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
-                filterType.append("Static ");
-                if(speedFilter) return true;
-            }
-            if (filterDistance(position, preceding) && !skipLimit(position, preceding) && !skipAttributes(position)) {
-                filterType.append("Distance ");
-                if(speedFilter) return true;
-            }
-            if (filterMaxSpeed(position, preceding)) {
-                filterType.append("MaxSpeed ");
-                if(speedFilter) return true;
-            }
-            if (filterMinPeriod(position, preceding)) {
-                filterType.append("MinPeriod ");
-                if(speedFilter) return true;
-            }
-        }
-
-        Device device = cacheManager.getObject(Device.class, deviceId);
-        if (device.getCalendarId() > 0) {
-            Calendar calendar = cacheManager.getObject(Calendar.class, device.getCalendarId());
-            if (!calendar.checkMoment(position.getFixTime())) {
-                filterType.append("Calendar ");
-                if(speedFilter) return true;
-            }
-        }
-
-        if (filterType.length() > 0) {
+			if (device.getCalendarId() > 0) {
+				Calendar calendar = cacheManager.getObject(Calendar.class, device.getCalendarId());
+				if (!calendar.checkMoment(position.getFixTime())) {
+					filterType.append("Calendar ");
+				}
+			}
+		break;
+		}
+		if (filterType.length() > 0) {
             LOGGER.info("Position filtered by {}filters from device: {}", filterType, device.getUniqueId());
-            return true;
-        }
-
+			return true;
+		}
         return false;
     }
 
