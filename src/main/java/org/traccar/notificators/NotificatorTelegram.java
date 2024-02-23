@@ -30,8 +30,14 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Singleton
 public class NotificatorTelegram implements Notificator {
+
+
+   private static final Logger LOGGER = LoggerFactory.getLogger(NotificatorTelegram.class);
 
     private final NotificationFormatter notificationFormatter;
     private final Client client;
@@ -100,6 +106,7 @@ public class NotificatorTelegram implements Notificator {
 		// Как то узнать что это не надо делать
 		
 		var ss=position.getInteger(position.KEY_GEOFENCE);
+		LOGGER.info("Telegram  KEY_GEOFENCE {},ss);
 		
         if (sendLocation && position != null) {
             client.target(urlSendLocation).request().post(
