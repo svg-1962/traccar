@@ -96,6 +96,11 @@ public class NotificatorTelegram implements Notificator {
         }
         message.text = shortMessage.getBody();
         client.target(urlSendText).request().post(Entity.json(message)).close();
+		
+		// Как то узнать что это не надо делать
+		
+		var ss=position.getInteger(position.KEY_GEOFENCE);
+		
         if (sendLocation && position != null) {
             client.target(urlSendLocation).request().post(
                     Entity.json(createLocationMessage(message.chatId, position))).close();
