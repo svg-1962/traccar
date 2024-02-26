@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
+<properties>
+
+    <entry key='config.default'>./conf/default.xml</entry>
+
+    <!--
+
+    This is the main configuration file. All your configuration parameters should be placed in this file.
+
+    Default configuration parameters are located in the "default.xml" file. You should not modify it to avoid issues
+    with upgrading to a new version. Parameters in the main config file override values in the default file. Do not
+    remove "config.default" parameter from this file unless you know what you are doing.
+
+    For list of available parameters see following page: https://www.traccar.org/configuration-file/
+
+    -->
+
+
+    <entry key='speed.filter'>true</entry>
+
+    <entry key='disableShare'>false</entry>
+
+    <entry key='database.driver'>org.postgresql.Driver</entry>
+    <entry key='database.url'>jdbc:postgresql://127.0.0.1:5432/my_tracker</entry>
+    <entry key='database.user'>postgres</entry>
+    <entry key='database.password'>Sanduca_2024</entry>	
+    <entry key='database.saveOriginal'>true</entry>	
+
+    <!--entry key='server.timeout'>20</entry-->	
+    <!--entry key='status.timeout'>300</entry-->	
+    <entry key='server.instantAcknowledgement'>true</entry>
+
+    <entry key='database.positionsHistoryDays'>60</entry>
+    <entry key='database.historyDays'>60</entry>
+
+    <entry key='geocoder.enable'>true</entry>
+    <entry key='geocoder.type'>nominatim</entry>
+    <entry key='geocoder.url'>http://192.168.1.145:60001/reverse</entry>
+    <entry key='geocoder.onRequest'>true</entry>
+    <entry key='geocoder.reuseDistance'>50</entry>
+    <entry key='geocoder.ignorePosition'>true</entry>
+    <entry key='geocoder.reuseDistanse'>50</entry>
+    <entry key='geocoder.format'>%t (%s) %r %h</entry>
+
+    <entry key='filter.enable'>true</entry>
+    <entry key='filter.future'>86400</entry>
+    <entry key='filter.zero'>true</entry>
+    <entry key='filter.duplicate'>true</entry>
+    <!--entry key='filter.static'>false</entry-->
+
+    <entry key='event.ignoreDuplicateAlerts'>true</entry>
+
+    <entry key='report.trip.useIgnition'>true</entry>
+    <entry key='report.trip.minimalNoDataDuration'>3600</entry>
+    <entry key='report.trip.minimalParkingDuration'>3600</entry>
+
+    <entry key='notificator.types'>web,telegram,mail</entry>
+    <entry key='notificator.timeThreshold'>86400000</entry>
+    <entry key='notificator.telegram.key'>6416776913:AAEf8Wsr9HnlAIb36LDqPPEx7yZFp3Ibrrg</entry>
+    <entry key='notificator.telegram.sendLocation'>true</entry>
+    <!--entry key='notificator.telegram.chatId'>-1001969317407</entry-->
+
+
+    <entry key='forward.enable'>true</entry>
+    <entry key='forward.type'>json</entry>
+    <entry key='forward.retry.enable'>true</entry>
+    <entry key='forward.url'>http://192.168.1.145:8888/raw.php</entry>
+    <entry key='event.forward.url'>http://192.168.1.145:8888/event.php</entry>
+
+    <!--entry key='mail.smtp.host'>imp4.mail.ru</entry>
+    <entry key='mail.smtp.port'>465</entry>
+    <entry key='mail.smtp.ssl.enable'>true</entry>
+    <entry key='mail.smtp.from'>my.tracker@mail.ru</entry>
+    <entry key='mail.smtp.auth'>true</entry>
+    <entry key='mail.smtp.username'>my.tracker@mail.ru</entry>
+    <entry key='mail.smtp.password'>S_anduca2001</entry-->
+
+</properties>
