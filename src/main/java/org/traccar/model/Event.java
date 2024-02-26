@@ -22,6 +22,8 @@ import java.util.Date;
 @StorageName("tc_events")
 public class Event extends Message {
 
+    public  String Type_Event;
+
     public Event(String type, Position position) {
 	Type_Event=type;
         setType(type);
@@ -31,6 +33,7 @@ public class Event extends Message {
     }
 
     public Event(String type, long deviceId) {
+	Type_Event=type;
         setType(type);
         setDeviceId(deviceId);
         eventTime = new Date();
@@ -70,7 +73,6 @@ public class Event extends Message {
     public static final String TYPE_MEDIA = "media";
 
     private Date eventTime;
-    public  String Type_Event;
 
     public Date getEventTime() {
         return eventTime;

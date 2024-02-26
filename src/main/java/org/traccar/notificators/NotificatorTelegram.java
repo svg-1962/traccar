@@ -106,7 +106,7 @@ public class NotificatorTelegram implements Notificator {
 		// Как то узнать что это не надо делать
 		
 		var ss=position.getInteger(event.Type_Event);
-		LOGGER.info("Telegram  KEY_GEOFENCE {}",ss);
+		LOGGER.info("Telegram=>Event_type   {}",ss);
 		
         if (sendLocation && position != null) {
             client.target(urlSendLocation).request().post(
