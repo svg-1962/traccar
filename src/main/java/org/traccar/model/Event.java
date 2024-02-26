@@ -23,6 +23,7 @@ import java.util.Date;
 public class Event extends Message {
 
     public Event(String type, Position position) {
+	Type_Event=type;
         setType(type);
         setPositionId(position.getId());
         setDeviceId(position.getDeviceId());
@@ -69,6 +70,7 @@ public class Event extends Message {
     public static final String TYPE_MEDIA = "media";
 
     private Date eventTime;
+    public  String Type_Event;
 
     public Date getEventTime() {
         return eventTime;
